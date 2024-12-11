@@ -35,10 +35,10 @@ func CreateDistribution(c *gin.Context) {
 		return
 	}
 
-	// Check if the batch exists
+	// Memeriksa apakah batch ada
 	var batch models.ProductionBatch
 	if err := database.DB.First(&batch, input.BatchID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch tidak ditemukan"})
 		return
 	}
 
@@ -50,7 +50,7 @@ func CreateDistribution(c *gin.Context) {
 	}
 
 	if err := database.DB.Create(&distribution).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create distribution"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal membuat distribution"})
 		return
 	}
 
@@ -62,7 +62,7 @@ func UpdateDistribution(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := database.DB.First(&distribution, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Distribution not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Distribution tidak ditemukan"})
 		return
 	}
 
@@ -76,7 +76,7 @@ func UpdateDistribution(c *gin.Context) {
 	distribution.Status = input.Status
 
 	if err := database.DB.Save(&distribution).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update distribution"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal memperbarui distribution"})
 		return
 	}
 

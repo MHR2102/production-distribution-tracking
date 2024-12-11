@@ -9,24 +9,24 @@ import (
 )
 
 func main() {
-	// Initialize the database
+	// Inisialisasi database
 	database.ConnectDB()
 	database.MigrateDB()
 
 	r := gin.Default()
 
-	// Auth routes
+	// Routing untuk autentikasi
 	authRoutes := r.Group("/auth")
 	{
 		authRoutes.POST("/register", controllers.Register)
 		authRoutes.POST("/login", controllers.Login)
 	}
 
-	// Protected routes
+	// Routing yang membutuhkan autentikasi
 	protected := r.Group("/")
 	protected.Use(middleware.JWTAuth())
 
-	// Production Batch routes
+	// Routing untuk Production Batch
 	productionRoutes := protected.Group("/production-batches")
 	{
 		productionRoutes.GET("/", controllers.GetProductionBatches)
@@ -35,7 +35,7 @@ func main() {
 		productionRoutes.DELETE("/:id", middleware.Authorize("admin"), controllers.DeleteProductionBatch)
 	}
 
-	// Distribution routes
+	// Routing untuk Distribution
 	distributionRoutes := protected.Group("/distributions")
 	{
 		distributionRoutes.GET("/", controllers.GetDistributions)
@@ -43,13 +43,13 @@ func main() {
 		distributionRoutes.PUT("/:id", controllers.UpdateDistribution)
 	}
 
-	// Report routes
+	// Routing untuk Reports
 	reportRoutes := protected.Group("/reports")
 	{
 		reportRoutes.GET("/production", controllers.GetProductionReport)
 		reportRoutes.GET("/distribution", controllers.GetDistributionReport)
 	}
 
-	// Run the server
+	// Menjalankan server
 	r.Run(":8080")
 }

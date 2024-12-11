@@ -10,13 +10,13 @@ func Authorize(requiredRole string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		role, exists := c.Get("userRole")
 		if !exists {
-			c.JSON(http.StatusForbidden, gin.H{"error": "User role not found"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "User role tidak ditemukan"})
 			c.Abort()
 			return
 		}
 
 		if role != requiredRole {
-			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this resource"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "Anda tidak memiliki akses ke resource ini"})
 			c.Abort()
 			return
 		}

@@ -29,7 +29,7 @@ func CreateProductionBatch(c *gin.Context) {
 	}
 
 	if err := database.DB.Create(&batch).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create production batch"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal membuat production batch"})
 		return
 	}
 
@@ -41,7 +41,7 @@ func UpdateProductionBatch(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := database.DB.First(&batch, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch tidak ditemukan"})
 		return
 	}
 
@@ -54,7 +54,7 @@ func UpdateProductionBatch(c *gin.Context) {
 	batch.Status = input.Status
 
 	if err := database.DB.Save(&batch).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update production batch"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal memperbarui production batch"})
 		return
 	}
 
@@ -65,20 +65,20 @@ func DeleteProductionBatch(c *gin.Context) {
 	id := c.Param("id")
 	var batch models.ProductionBatch
 	if err := database.DB.First(&batch, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Production batch tidak ditemukan"})
 		return
 	}
 
-	// Only allow deletion if status is "gagal"
+	// Hanya memperbolehkan penghapusan jika status "gagal"
 	if batch.Status != "gagal" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Only batches with status 'gagal' can be deleted"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "Hanya batch dengan status 'gagal' yang dapat dihapus"})
 		return
 	}
 
 	if err := database.DB.Delete(&batch).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete production batch"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menghapus production batch"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Production batch deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Production batch berhasil dihapus"})
 }

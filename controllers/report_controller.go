@@ -24,7 +24,7 @@ func GetProductionReport(c *gin.Context) {
 		endDate, err2 := time.Parse(layout, endDateStr)
 
 		if err1 != nil || err2 != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format tanggal tidak valid"})
 			return
 		}
 
