@@ -1,0 +1,369 @@
+openapi: 3.0.0
+info:
+  title: Production and Distribution Tracking API
+  description: "API for monitoring the production and distribution of documents or\
+    \ currency in real-time, ensuring transparency and security in the distribution\
+    \ chain."
+  contact:
+    email: support@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/MUHAMADHAZELRAFIANTO/API_Sistem_Pelacakan_Produksi_dan_Distribusi/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080
+  description: Local development server
+tags:
+- name: Authentication
+  description: User authentication endpoints
+- name: Production Batches
+  description: Endpoints for managing production batches
+- name: Distributions
+  description: Endpoints for managing distributions
+- name: Reports
+  description: Endpoints for generating reports
+paths:
+  /auth/register:
+    post:
+      tags:
+      - Authentication
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_register_body'
+        required: true
+      responses:
+        "201":
+          description: User registered successfully
+        "400":
+          description: Invalid input
+  /auth/login:
+    post:
+      tags:
+      - Authentication
+      summary: User login
+      operationId: userLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_login_body'
+        required: true
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: Unauthorized
+  /production-batches:
+    get:
+      tags:
+      - Production Batches
+      summary: Get all production batches
+      operationId: getProductionBatches
+      responses:
+        "200":
+          description: A list of production batches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+    post:
+      tags:
+      - Production Batches
+      summary: Create a new production batch
+      operationId: createProductionBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/productionbatches_body'
+        required: true
+      responses:
+        "201":
+          description: Production batch created
+        "400":
+          description: Invalid input
+  /production-batches/{batch_id}:
+    put:
+      tags:
+      - Production Batches
+      summary: Update a production batch
+      operationId: updateProductionBatch
+      parameters:
+      - name: batch_id
+        in: path
+        description: ID of the production batch to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/productionbatches_batch_id_body'
+        required: true
+      responses:
+        "200":
+          description: Production batch updated
+        "404":
+          description: Batch not found
+    delete:
+      tags:
+      - Production Batches
+      summary: Delete a production batch
+      operationId: deleteProductionBatch
+      parameters:
+      - name: batch_id
+        in: path
+        description: ID of the production batch to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Batch deleted successfully
+        "404":
+          description: Batch not found
+  /distributions:
+    get:
+      tags:
+      - Distributions
+      summary: Get all distributions
+      operationId: getDistributions
+      responses:
+        "200":
+          description: A list of distributions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+                x-content-type: application/json
+    post:
+      tags:
+      - Distributions
+      summary: Create a new distribution
+      operationId: createDistribution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/distributions_body'
+        required: true
+      responses:
+        "201":
+          description: Distribution created
+        "400":
+          description: Invalid input
+  /reports/production:
+    get:
+      tags:
+      - Reports
+      summary: Get production report
+      operationId: getProductionReport
+      parameters:
+      - name: start_date
+        in: query
+        description: Start date for the report
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date
+          example: 2024-12-01
+      - name: end_date
+        in: query
+        description: End date for the report
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date
+          example: 2024-12-31
+      responses:
+        "200":
+          description: Production report data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+  /reports/distribution:
+    get:
+      tags:
+      - Reports
+      summary: Get distribution report
+      operationId: getDistributionReport
+      parameters:
+      - name: batch_id
+        in: query
+        description: ID of the batch to get the distribution report for
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        "200":
+          description: Distribution report data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+components:
+  schemas:
+    auth_register_body:
+      required:
+      - password
+      - role
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: User2
+        password:
+          type: string
+          example: testpassword
+        role:
+          type: string
+          example: operator
+    auth_login_body:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: testuser
+        password:
+          type: string
+          example: testpassword
+    inline_response_200:
+      type: object
+      properties:
+        token:
+          type: string
+          example: your_jwt_token
+      example:
+        token: your_jwt_token
+    inline_response_200_1:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        batch_number:
+          type: string
+          example: BATCH001
+        total_units:
+          type: integer
+          example: 1000
+        status:
+          type: string
+          example: proses
+      example:
+        batch_number: BATCH001
+        id: 1
+        total_units: 1000
+        status: proses
+    productionbatches_body:
+      required:
+      - batch_number
+      - total_units
+      type: object
+      properties:
+        batch_number:
+          type: string
+          example: BATCH001
+        total_units:
+          type: integer
+          example: 1000
+    productionbatches_batch_id_body:
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          example: selesai
+    inline_response_200_2:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        batch_id:
+          type: integer
+          example: 1
+        serial_number:
+          type: string
+          example: SN001
+        location:
+          type: string
+          example: Jakarta
+      example:
+        batch_id: 1
+        serial_number: SN001
+        location: Jakarta
+        id: 1
+    distributions_body:
+      required:
+      - batch_id
+      - location
+      - serial_number
+      type: object
+      properties:
+        batch_id:
+          type: integer
+          example: 1
+        serial_number:
+          type: string
+          example: SN001
+        location:
+          type: string
+          example: Jakarta
+    inline_response_200_3:
+      type: object
+      properties:
+        total_batches:
+          type: integer
+          example: 10
+        completed_batches:
+          type: integer
+          example: 8
+      example:
+        completed_batches: 8
+        total_batches: 10
+    inline_response_200_4:
+      type: object
+      properties:
+        total_distributions:
+          type: integer
+          example: 5
+        delivered:
+          type: integer
+          example: 4
+      example:
+        total_distributions: 5
+        delivered: 4
