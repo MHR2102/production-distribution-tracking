@@ -1,6 +1,5 @@
 # Production and Distribution Tracking System
 
-![Production and Distribution Tracking](https://via.placeholder.com/800x200.png?text=Production+and+Distribution+Tracking+System)
 
 ## Overview
 
